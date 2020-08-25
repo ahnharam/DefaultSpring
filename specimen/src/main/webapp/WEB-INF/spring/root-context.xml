@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc https://www.springframework.org/schema/jdbc/spring-jdbc-4.2.xsd
+						http://www.springframework.org/schema/jee https://www.springframework.org/schema/jee/spring-jee-4.2.xsd
+						http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+						http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+						http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+						http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+	<!-- Root Context: defines shared resources visible to all other web components -->
+
+	<!-- 
+		다른 스키마에 있는 내용을 읽을 수 있도록 선언
+		이 annotation-config 태그는 기본 xml에서는 제공하지 않는 태그이다.
+		이 태그를 사용하도록 하기 위해서는 context라는 스키마를 사용하겠다고 선언을 해줘야 한다.
+		
+		1. 스키마 사용을 선언해 주고
+		2. 해당 스키마를 해석할 수 있는 도구를 지정해야 한다.
+	-->
+	
+	<context:annotation-config />
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+		<property name="url" value="jdbc:sqlserver://localhost:1433;databaseName=Student" />
+		<property name="username" value="test" />
+		<property name="password" value="1234" />
+	</bean>
+	<bean id="dbcp" class="com.specimen.www.util.WebDBCP" />
+
+	<!-- myBatis 환경 설정 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation" value="classpath:/com/specimen/www/mybatis/mybatis-config.xml"></property>
+	</bean>
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+
+	<!-- DAO class 빈 처리 -->
+	<import resource="./appServlet/dao-context.xml" /> 
+
+	<!-- Service Class 빈처리 -->
+	<import resource="./appServlet/service-context.xml" />
+</beans>
