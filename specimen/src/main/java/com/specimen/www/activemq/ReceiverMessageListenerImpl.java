@@ -17,13 +17,13 @@ public class ReceiverMessageListenerImpl implements MessageListener {
   
   public void onMessage(Message message) {
     OEEStateMqMessage member = null;
-    //logger.info("onMessage1");
+    logger.debug("onMessage start");
     try {
       member = (OEEStateMqMessage)this.memberConverter.fromMessage(message);
-      //logger.info("onMessage2");
+      //logger.debug("onMessage2");
       if (member != null) {
         System.out.println("member.toString(): " + member.toString());
-        //logger.info("onMessage3");
+        logger.debug("onMessage member != null");
       } 
     } catch (Exception e) {
       System.err.println(e);

@@ -7,13 +7,15 @@
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/jdbc https://www.springframework.org/schema/jdbc/spring-jdbc-4.2.xsd
 						http://www.springframework.org/schema/jee https://www.springframework.org/schema/jee/spring-jee-4.2.xsd
 						http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
 						http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 						http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop-4.2.xsd
 						http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx-4.2.xsd
-						http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+						http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 	<!-- Root Context: defines shared resources visible to all other web components -->
 
 	<!-- 
@@ -26,7 +28,7 @@
 	-->
 	
 	<context:annotation-config />
-
+	<!-- 
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
 		<property name="url" value="jdbc:sqlserver://localhost:1433;databaseName=Student" />
@@ -34,8 +36,10 @@
 		<property name="password" value="1234" />
 	</bean>
 	<bean id="dbcp" class="com.specimen.www.util.WebDBCP" />
+	 -->
 
 	<!-- myBatis 환경 설정 -->
+	<!-- 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
 		<property name="configLocation" value="classpath:/com/specimen/www/mybatis/mybatis-config.xml"></property>
@@ -43,10 +47,15 @@
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg index="0" ref="sqlSessionFactory" />
 	</bean>
-
+ 	-->
+ 	<util:properties id="props" location="classpath:/properties/db_property.properties" />     
+ 	
 	<!-- DAO class 빈 처리 -->
 	<import resource="./appServlet/dao-context.xml" /> 
 
 	<!-- Service Class 빈처리 -->
 	<import resource="./appServlet/service-context.xml" />
+	
+	<!-- ActiveMQ class 빈 처리 -->
+	<import resource="./appServlet/activemq-context.xml" /> 
 </beans>

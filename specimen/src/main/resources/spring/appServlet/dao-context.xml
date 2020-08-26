@@ -9,5 +9,5 @@
 
 	<!-- example -->
 	<!-- <bean id="cameraDAO" class="com.specimen.www.DAO.CameraDAO" /> -->
-	
+	<bean class="com.specimen.www.activemq.webmmsDAOImpl" id="webmmsDAO"/>
 </beans>
