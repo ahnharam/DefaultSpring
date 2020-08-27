@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans	xmlns="http://www.springframework.org/schema/beans"
+			xmlns:jms="http://www.springframework.org/schema/jms" 
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+			xmlns:amq="http://activemq.apache.org/schema/core" 
+			xmlns:context="http://www.springframework.org/schema/context" 
+			xsi:schemaLocation="http://www.springframework.org/schema/beans 	http://www.springframework.org/schema/beans/spring-beans.xsd 
+											 http://www.springframework.org/schema/context	http://www.springframework.org/schema/context/spring-context-4.3.xsd
+											 http://activemq.apache.org/schema/core	http://activemq.apache.org/schema/core/activemq-core.xsd
+											 http://www.springframework.org/schema/jms 	http://www.springframework.org/schema/jms/spring-jms.xsd"	>
+
+	<!-- ActiveMQ Setting -->
+	<bean class="org.apache.activemq.ActiveMQConnectionFactory" id="OEEconnectionFactory">	
+		<property name="brokerURL">
+			<value>tcp://192.168.0.211:61616</value>
+		</property>
+		</bean>
+	<bean class="org.apache.activemq.pool.PooledConnectionFactory" id="OEEjmsFactory" destroy-method="stop">
+		<property name="connectionFactory" ref="OEEconnectionFactory"/>
+	</bean>
+	<!-- Queue -->
+	<!-- <bean id="OEEqueueDestination" class="org.apache.activemq.command.ActiveMQQueue"><constructor-arg value="dbin.queue"/></bean> -->
+	<!-- Topic -->
+	<bean class="org.apache.activemq.command.ActiveMQTopic" id="OEEtopicDestination">
+		<constructor-arg value="*"/>
+	</bean>
+	
+	<bean class="com.specimen.www.activemq.OEEActivemqMsgConverterImpl" id="OEEmsgConverter"/>
+	
+	<bean class="org.springframework.jms.core.JmsTemplate" id="OEEproducerJmsTemplate">
+		<property name="connectionFactory" ref="OEEjmsFactory"/>
+		<property name="defaultDestination" ref="OEEtopicDestination"/>
+		<property name="messageConverter" ref="OEEmsgConverter"/>
+		<!-- Topic 사용 여부 -->
+		<property name="pubSubDomain" value="true"/>
+	</bean>
+	
+	<bean class="com.specimen.www.activemq.ReceiverMessageListenerImpl" id="objectMessageListener"/>
+	
+	<jms:listener-container destination-type="topic" acknowledge="auto" connection-factory="OEEconnectionFactory">
+		<jms:listener ref="objectMessageListener" method="onMessage" destination="*"/>
+	</jms:listener-container>
+</beans>

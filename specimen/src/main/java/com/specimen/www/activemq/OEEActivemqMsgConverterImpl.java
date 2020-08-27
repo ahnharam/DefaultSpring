@@ -17,10 +17,10 @@ public class OEEActivemqMsgConverterImpl implements MessageConverter {
 	  
 	  public Message toMessage(Object object, Session session) throws JMSException, MessageConversionException {
 		  if (object instanceof OEEStateMqMessage) {
-			  //logger.debug("toMessage1");
+			  logger.debug("toMessage1");
 			  OEEStateMqMessage msg = (OEEStateMqMessage)object;
 			  TextMessage sendmsg = session.createTextMessage(msg.toString());
-			  //logger.debug(msg.toString());
+			  logger.debug(msg.toString());
 			  logger.debug("toMessage2");
 			  return (Message)sendmsg;
 		  }  
